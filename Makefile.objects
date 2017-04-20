@@ -1,0 +1,10 @@
+bitmap.lo: /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/bitmap.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/luanxun/code/test/source_code/php-src/ext/php_bitmap $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/bitmap.c -o bitmap.lo 
+php_bitmap.lo: /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/php_bitmap.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/luanxun/code/test/source_code/php-src/ext/php_bitmap $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/php_bitmap.c -o php_bitmap.lo 
+$(phplibdir)/php_bitmap.la: ./php_bitmap.la
+	$(LIBTOOL) --mode=install cp ./php_bitmap.la $(phplibdir)
+
+./php_bitmap.la: $(shared_objects_php_bitmap) $(PHP_BITMAP_SHARED_DEPENDENCIES)
+	$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_php_bitmap) $(PHP_BITMAP_SHARED_LIBADD)
+
