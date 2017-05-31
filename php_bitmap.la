@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/modules'
+libdir='/home/lx/code/php_bitmap/modules'

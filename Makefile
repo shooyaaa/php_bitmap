@@ -1,28 +1,28 @@
-srcdir = /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap
-builddir = /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap
-top_srcdir = /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap
-top_builddir = /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap
-EGREP = /usr/bin/grep -E
-SED = /usr/bin/sed
+srcdir = /home/lx/code/php_bitmap
+builddir = /home/lx/code/php_bitmap
+top_srcdir = /home/lx/code/php_bitmap
+top_builddir = /home/lx/code/php_bitmap
+EGREP = /bin/grep -E
+SED = /bin/sed
 CONFIGURE_COMMAND = './configure' '--enable-php_bitmap'
 CONFIGURE_OPTIONS = '--enable-php_bitmap'
-SHLIB_SUFFIX_NAME = dylib
+SHLIB_SUFFIX_NAME = so
 SHLIB_DL_SUFFIX_NAME = so
 ZEND_EXT_TYPE = zend_extension
-RE2C = re2c
-AWK = awk
+RE2C = exit 0;
+AWK = gawk
 shared_objects_php_bitmap = bitmap.lo php_bitmap.lo
 PHP_PECL_EXTENSION = php_bitmap
 PHP_MODULES = $(phplibdir)/php_bitmap.la
 PHP_ZEND_EX =
 all_targets = $(PHP_MODULES) $(PHP_ZEND_EX)
 install_targets = install-modules install-headers
-prefix = /usr/local/php713
+prefix = /usr/local/php714
 exec_prefix = $(prefix)
 libdir = ${exec_prefix}/lib
-prefix = /usr/local/php713
-phplibdir = /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/modules
-phpincludedir = /usr/local/php713/include/php
+prefix = /usr/local/php714
+phplibdir = /home/lx/code/php_bitmap/modules
+phpincludedir = /usr/local/php714/include/php
 CC = cc
 CFLAGS = -g -O0
 CFLAGS_CLEAN = $(CFLAGS)
@@ -31,11 +31,11 @@ CPPFLAGS = -DHAVE_CONFIG_H
 CXX =
 CXXFLAGS = -g -O0
 CXXFLAGS_CLEAN = $(CXXFLAGS)
-EXTENSION_DIR = /usr/local/php713/lib/php/extensions/debug-non-zts-20160303
-PHP_EXECUTABLE = /usr/local/php713/bin/php
+EXTENSION_DIR = /usr/local/php714/lib/php/extensions/debug-non-zts-20160303
+PHP_EXECUTABLE = /usr/local/php714/bin/php
 EXTRA_LDFLAGS =
 EXTRA_LIBS =
-INCLUDES = -I/usr/local/php713/include/php -I/usr/local/php713/include/php/main -I/usr/local/php713/include/php/TSRM -I/usr/local/php713/include/php/Zend -I/usr/local/php713/include/php/ext -I/usr/local/php713/include/php/ext/date/lib
+INCLUDES = -I/usr/local/php714/include/php -I/usr/local/php714/include/php/main -I/usr/local/php714/include/php/TSRM -I/usr/local/php714/include/php/Zend -I/usr/local/php714/include/php/ext -I/usr/local/php714/include/php/ext/date/lib
 LFLAGS =
 LDFLAGS =
 SHARED_LIBTOOL =
@@ -189,14 +189,13 @@ prof-use:
 
 .PHONY: all clean install distclean test prof-gen prof-clean prof-use
 .NOEXPORT:
-bitmap.lo: /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/bitmap.c
-	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/luanxun/code/test/source_code/php-src/ext/php_bitmap $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/bitmap.c -o bitmap.lo 
-php_bitmap.lo: /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/php_bitmap.c
-	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/luanxun/code/test/source_code/php-src/ext/php_bitmap $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/luanxun/code/test/source_code/php-src/ext/php_bitmap/php_bitmap.c -o php_bitmap.lo 
+bitmap.lo: /home/lx/code/php_bitmap/bitmap.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/home/lx/code/php_bitmap $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /home/lx/code/php_bitmap/bitmap.c -o bitmap.lo 
+php_bitmap.lo: /home/lx/code/php_bitmap/php_bitmap.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/home/lx/code/php_bitmap $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /home/lx/code/php_bitmap/php_bitmap.c -o php_bitmap.lo 
 $(phplibdir)/php_bitmap.la: ./php_bitmap.la
 	$(LIBTOOL) --mode=install cp ./php_bitmap.la $(phplibdir)
 
 ./php_bitmap.la: $(shared_objects_php_bitmap) $(PHP_BITMAP_SHARED_DEPENDENCIES)
 	$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_php_bitmap) $(PHP_BITMAP_SHARED_LIBADD)
 
-# DO NOT DELETE

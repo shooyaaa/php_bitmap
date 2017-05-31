@@ -2,10 +2,6 @@
 
 #include "bitmap.h"
 
-typedef struct {
-    zend_object object;
-    char *bits;
-} php_bitmap_base_t;
 
 static zend_class_entry *bitmap_ce;
 zend_object_handlers bitmap_handlers;
@@ -47,15 +43,26 @@ static zend_function_entry bitmap_base_methods[] = {
     {NULL, NULL, NULL}
 };
 
+
+typedef struct {
+    zend_object object;
+    char *bytes;
+    size_t size;
+} php_bitmap_base_t;
+
 static inline php_bitmap_base_t *bitmap_base_fetch_object(zend_object *obj) {
     return (php_bitmap_base_t *)((char*)(obj) - XtOffsetOf(php_bitmap_base_t, object));
 }
 
+#define Z_BITMAP_INTERN(intern, obj) {\
+    intern = (php_bitmap_base_t *)((char*)(obj) - XtOffsetOf(php_bitmap_base_t, object));\
+}
 #define Z_BITMAP_BASE_P(zv) php_bitmap_fetch_object(Z_OBJ_P((zv)))
 
 zend_object *php_bitmap_base_new(zend_class_entry *ce) /* {{{ */ {
     php_bitmap_base_t *intern = ecalloc(1, sizeof(php_bitmap_base_t) + zend_object_properties_size(ce));
-    intern->bits = ecalloc(1, 8);
+    intern->size = 8;
+    intern->bytes = ecalloc(1, intern->size);
     zend_object_std_init(&intern->object, ce);
     object_properties_init(&intern->object, ce);
     intern->object.handlers = &bitmap_handlers;
@@ -69,22 +76,93 @@ static void php_bitmap_base_free(zend_object *object) /* {{{ */ {
     if (!intern) {
         return;
     }
-    efree(intern->bits);
+    efree(intern->bytes);
     zend_object_std_dtor(&intern->object);
 }
 
-
-static ZEND_METHOD(bitmap, getBit) {
-    php_bitmap_base_t *intern = bitmap_base_fetch_object(Z_BITMAP_BASE_P(getThis()));
+static int bitmap_get_byte_addr(php_bitmap_base_t *intern, size_t index, char **pos, char *rm) {
+    size_t byteIndex;
+    short offset, i;
+    unsigned char mask = 0x80;
+    if (index <= 0) {
+        return 0;
+    }
+    byteIndex = (size_t)floor((index - 1) / 8);
+    offset = (index - 1) % 8;
+    for (i = 0; i < offset; i++) {
+        mask = mask >> 1;
+    }
+    *rm = mask;
+    *pos = intern->bytes + byteIndex;
+    return 1;
 }
 
+
+static int bitmap_resize_byte_map(php_bitmap_base_t *intern, size_t size) {
+    size_t oldSize = intern->size;
+    if (oldSize > size) {
+        return 1;
+    }
+    char *newBytes = ecalloc(1, size);
+    memcpy(newBytes, intern->bytes, intern->size);
+    efree(intern->bytes);
+    intern->bytes = newBytes;
+    intern->size = size;
+    return 0;
+}
+
+static ZEND_METHOD(bitmap, getBit) {
+    php_bitmap_base_t *intern;
+    int offset, index, byteIndex, i;
+    char* pos, rm;
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &index) == FAILURE) {
+        return;
+    }
+
+    Z_BITMAP_INTERN(intern, Z_OBJ_P(getThis()));
+    if (index > intern->size) {
+        RETURN_FALSE;
+    }
+
+    bitmap_get_byte_addr(intern, index, &pos, &rm);
+    char result = *pos & rm ? '1' : '0';
+    RETURN_STRINGL(&result, 1);
+}
+
+
 static ZEND_METHOD(bitmap, setBit) {
-    php_bitmap_base_t *intern = bitmap_base_fetch_object(Z_BITMAP_BASE_P(getThis()));
+    php_bitmap_base_t *intern;
+    int offset, index, byteIndex, i;
+    char *pos, rm;
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &index) == FAILURE) {
+        return;
+    }
+    Z_BITMAP_INTERN(intern, Z_OBJ_P(getThis()));
+    size_t byteOffset = (size_t)floor((index - 1) / 8);
+    if (byteOffset >= intern->size) {
+        bitmap_resize_byte_map(intern, byteOffset * 2);
+    }
+
+    bitmap_get_byte_addr(intern, index, &pos, &rm);
+    *pos = *pos | rm;
 }
 
 static ZEND_METHOD(bitmap, dumpBit) {
-    zend_string *result = {0};
-    ZVAL_STR(return_value, 'abc');
+    php_bitmap_base_t *intern;
+    Z_BITMAP_INTERN(intern, Z_OBJ_P(getThis()));
+    short j, count;
+    size_t total, i;
+    total = intern->size * sizeof(char) * 8;
+    char *result = ecalloc(1, total);
+    for (i = 0; i < intern->size; i ++) {
+        count = 0;
+        for (j = 0x80; j > 0; j /= 2) {
+            result[i * 8 + count] = intern->bytes[i] & j ? '1' : '0';
+            count ++;
+        }
+    }
+    RETVAL_STRINGL(result, total);
+    efree(result);
 }
 
 static ZEND_METHOD(bitmap, __construct) /* {{{ */ {
