@@ -1,0 +1,15 @@
+A php version bitmap extension
+
+install:
+    phpize
+    ./configure --enable-php_bitmap
+    make
+    make install
+
+usage:
+    $foo = new PhpBitmap();
+    $foo->setBit(1);
+    $foo->setBit(100);
+    $foo->getBit(1);
+    echo $foo->dumpBit();
+    var_export($foo->getBytes);
