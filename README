@@ -12,4 +12,4 @@ usage:
     $foo->setBit(100);
     $foo->getBit(1);
     echo $foo->dumpBit();
-    var_export($foo->getBytes);
+    var_export($foo->getBytes());
