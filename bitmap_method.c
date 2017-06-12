@@ -37,7 +37,7 @@ static ZEND_METHOD(bitmap, getBit) {
         return;
     }
 
-    Z_BITMAP_INTERN(intern, getThis());
+    Z_BITMAP_INTERN(intern, GET_BITMAP_THIS(getThis()));
     if (index > intern->size) {
         RETURN_FALSE;
     }
@@ -55,7 +55,7 @@ static ZEND_METHOD(bitmap, setBit) {
     if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &index) == FAILURE) {
         return;
     }
-    Z_BITMAP_INTERN(intern, getThis());
+    Z_BITMAP_INTERN(intern, GET_BITMAP_THIS(getThis()));
     size_t byteOffset = (size_t)floor((index - 1) / 8);
     if (byteOffset >= intern->size) {
         bitmap_resize_byte_map(intern, byteOffset * 2);
@@ -67,7 +67,7 @@ static ZEND_METHOD(bitmap, setBit) {
 
 static ZEND_METHOD(bitmap, dumpBit) {
     php_bitmap_base_t *intern;
-    Z_BITMAP_INTERN(intern, getThis());
+    Z_BITMAP_INTERN(intern, GET_BITMAP_THIS(getThis()));
     short j, count;
     size_t total, i;
     total = intern->size * sizeof(char) * 8;
@@ -85,7 +85,7 @@ static ZEND_METHOD(bitmap, dumpBit) {
 
 static ZEND_METHOD(bitmap, getBytes) {
     php_bitmap_base_t *intern;
-    Z_BITMAP_INTERN(intern, getThis());
+    Z_BITMAP_INTERN(intern, GET_BITMAP_THIS(getThis()));
     BITMAP_RETURN_STRING(intern->bytes, intern->size);
 }
 

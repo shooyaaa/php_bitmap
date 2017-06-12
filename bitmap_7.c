@@ -60,15 +60,15 @@ static inline php_bitmap_base_t *bitmap_base_fetch_object(zend_object *obj) {
 }
 #define Z_BITMAP_BASE_P(zv) php_bitmap_fetch_object(Z_OBJ_P((zv)))
 
+#define GET_BITMAP_THIS(obj) Z_OBJ_P(obj)
+
 zend_object *php_bitmap_base_new(zend_class_entry *ce) /* {{{ */ {
     php_bitmap_base_t *intern = ecalloc(1, sizeof(php_bitmap_base_t) + zend_object_properties_size(ce));
     intern->size = 8;
     intern->bytes = ecalloc(1, intern->size);
     zend_object_std_init(&intern->object, ce);
     object_properties_init(&intern->object, ce);
-#if zend_module_api_no > 20131226
     intern->object.handlers = &bitmap_handlers;
-#endif
 
     return &intern->object;
 }

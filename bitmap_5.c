@@ -28,6 +28,8 @@
     }
 #endif
 
+#define GET_BITMAP_THIS(obj) obj
+
 #define MALLOC_BITMAP_BASE_T emalloc(sizeof(php_bitmap_base_t));
 
 #if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 0)
