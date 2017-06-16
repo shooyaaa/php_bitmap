@@ -90,12 +90,18 @@ static ZEND_METHOD(bitmap, getBytes) {
 }
 
 static ZEND_METHOD(bitmap, __construct) /* {{{ */ {
-
+    php_bitmap_base_t *intern;
+    int len;
+    char *str;
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sl", &str, &len) == FAILURE) {
+        return;
+    }
+    Z_BITMAP_INTERN(intern, GET_BITMAP_THIS(getThis()));
+    if (len >= intern->size) {
+        char *newBytes = ecalloc(1, len);
+        efree(intern->bytes);
+        intern->bytes = newBytes;
+        intern->size = len;
+    }
+    memcpy(intern->bytes, str, len);
 }
-/* }}} */
-
-static ZEND_METHOD(bitmap, setOption) /* {{{ */ {
-
-    RETURN_TRUE;
-}
-/* }}} */
