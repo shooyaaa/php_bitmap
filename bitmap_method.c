@@ -91,9 +91,12 @@ static ZEND_METHOD(bitmap, getBytes) {
 
 static ZEND_METHOD(bitmap, __construct) /* {{{ */ {
     php_bitmap_base_t *intern;
-    int len;
+    int len = 0;
     char *str;
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &str, &len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "|s", &str, &len) == FAILURE) {
+        return;
+    }
+    if (len == 0) {
         return;
     }
     Z_BITMAP_INTERN(intern, GET_BITMAP_THIS(getThis()));
