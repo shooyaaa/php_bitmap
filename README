@@ -13,3 +13,8 @@ usage:
     $foo->getBit(1);
     echo $foo->dumpBit();
     var_export($foo->getBytes());
+    
+    You can init bits from string too.
+    
+    $foo = new PhpBitmap();
+    $foo->dumpBit();
