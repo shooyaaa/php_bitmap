@@ -93,7 +93,7 @@ static ZEND_METHOD(bitmap, __construct) /* {{{ */ {
     php_bitmap_base_t *intern;
     int len;
     char *str;
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sl", &str, &len) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &str, &len) == FAILURE) {
         return;
     }
     Z_BITMAP_INTERN(intern, GET_BITMAP_THIS(getThis()));

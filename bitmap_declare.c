@@ -9,9 +9,8 @@ static ZEND_METHOD(bitmap, getBit);
 static ZEND_METHOD(bitmap, dumpBit);
 static ZEND_METHOD(bitmap, getBytes);
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_bitmap_base___construct, 0, 0, 2)
+ZEND_BEGIN_ARG_INFO_EX(arginfo_bitmap_base___construct, 0, 0, 1)
     ZEND_ARG_INFO(0, str)
-    ZEND_ARG_INFO(0, len)
 ZEND_END_ARG_INFO()
 
 
