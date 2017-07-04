@@ -16,5 +16,5 @@ usage:
     
     You can init bits from string too.
     
-    $foo = new PhpBitmap();
+    $foo = new PhpBitmap('a');
     $foo->dumpBit();
